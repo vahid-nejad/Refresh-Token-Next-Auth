@@ -1,38 +1,13 @@
 "use client";
 import Button from "@elements/Button";
 import TextBox from "@elements/TextBox";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { useRef } from "react";
 
-interface IProps {
-  searchParams: {
-    backUrl?: string;
-  };
-}
-const LoginPage = ({ searchParams: { backUrl } }: IProps) => {
+const LoginPage = () => {
   const userName = useRef("");
   const pass = useRef("");
-  const router = useRouter();
 
-  const onSubmit = async () => {
-    console.log("here");
-
-    const result = await signIn("credentials", {
-      username: userName.current,
-      password: pass.current,
-      redirect: true,
-      callbackUrl: backUrl || "/",
-    });
-
-    if (result?.ok) {
-      console.log({ result });
-
-      alert("Success");
-      if (backUrl) router.push(backUrl);
-      else router.push("/");
-    }
-  };
+  const onSubmit = async () => {};
   return (
     <div
       className={
