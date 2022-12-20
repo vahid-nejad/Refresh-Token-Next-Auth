@@ -1,13 +1,21 @@
 "use client";
 import Button from "@elements/Button";
 import TextBox from "@elements/TextBox";
+import { signIn } from "next-auth/react";
 import { useRef } from "react";
 
 const LoginPage = () => {
   const userName = useRef("");
   const pass = useRef("");
 
-  const onSubmit = async () => {};
+  const onSubmit = async () => {
+    const result = await signIn("credentials", {
+      username: userName.current,
+      password: pass.current,
+      redirect: true,
+      callbackUrl: "/",
+    });
+  };
   return (
     <div
       className={
