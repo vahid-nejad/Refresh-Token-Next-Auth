@@ -1,5 +1,4 @@
-export interface IButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface IButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;
   children?: React.ReactNode;
   variant?:
@@ -54,9 +53,9 @@ const Button = ({
       type={type}
       className={`
  
-        ${getVariant()}  transition duration-500  ${
-        !paddingLess && "py-2 px-4"
-      }  ${!square && "rounded-md"} active:scale-95 ${className} `}
+        ${getVariant()}  transition duration-200 ease-in-expo ${!paddingLess && "py-2 px-4"}  ${
+        !square && "rounded-md"
+      } active:scale-95 ${className} `}
     >
       {children}
     </button>

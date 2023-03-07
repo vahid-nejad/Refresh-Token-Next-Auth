@@ -1,13 +1,24 @@
 "use client";
-import { signIn, signOut } from "next-auth/react";
-import Link from "next/link";
-import React from "react";
+
+import Button from "@elements/Button";
+import useAxiosAuth from "lib/hooks/useAxiosAuth";
+
+import { useSession } from "next-auth/react";
+import { useState } from "react";
 
 const HomePage = () => {
+  const { data: session } = useSession();
+  const [posts, setPosts] = useState();
+  const axiosAuth = useAxiosAuth();
+  const fetchPost = async () => {
+    const res = await axiosAuth.get("/test/user/1/posts");
+    setPosts(res.data);
+  };
   return (
-    <h1 className="flex justify-center items-center p-5 text-green-500 text-lg font-bold">
-      This Is The Home Page! Everyone can see it.
-    </h1>
+    <div>
+      <Button onClick={fetchPost}>Get User Posts</Button>
+      {posts && JSON.stringify(posts)}
+    </div>
   );
 };
 

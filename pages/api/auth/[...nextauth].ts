@@ -1,11 +1,9 @@
+import NextAuth, { AuthOptions, User } from "next-auth";
+import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
-import NextAuth from "next-auth";
-import type { NextAuthOptions } from "next-auth";
-
-export const authOptions: NextAuthOptions = {
+export const authOptions: AuthOptions = {
   // Configure one or more authentication providers
   providers: [
-    // ...add more providers here
     CredentialsProvider({
       // The name to display on the sign in form (e.g. "Sign in with...")
       name: "Credentials",
@@ -18,34 +16,43 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        const { username, password } = credentials as any;
+        // Add logic here to look up the user from the credentials supplied
+
         const res = await fetch("http://localhost:8000/auth/login", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            username,
-            password,
+            username: credentials?.username,
+            password: credentials?.password,
           }),
         });
-
         const user = await res.json();
 
-        if (res.ok && user) {
+        if (user) {
+          // Any object returned will be saved in `user` property of the JWT
           return user;
-        } else return null;
+        } else {
+          // If you return null then an error will be displayed advising the user to check their details.
+          return null;
+
+          // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
+        }
       },
     }),
   ],
+  callbacks: {
+    async jwt({ token, user, account }) {
+      console.log({ account });
 
-  session: {
-    strategy: "jwt",
-  },
+      return { ...token, ...user };
+    },
+    async session({ session, token, user }) {
+      session.user = token as any;
 
-  pages: {
-    signIn: "/auth/login",
+      return session;
+    },
   },
 };
-
 export default NextAuth(authOptions);
